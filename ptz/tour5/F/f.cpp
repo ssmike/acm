@@ -71,6 +71,9 @@ vector<vector<int>> slices;
 void disable(int v) {
     for (int i = 0; i < G[v].size(); i++) {
         deg[G[v][i]]--;
+        if (active[G[v][i]] && deg[G[v][i]] == 1) {
+            leafqueue[ql++] = G[v][i];
+        }
     }
     active[v] = false;
 }
@@ -98,7 +101,7 @@ void solve(int test_number)
 {
     qf = ql = 0;
     int n; scanf("%d", &n);   
-    for (int i = 1; i <= n; i++) {
+    for (int i = 1; i < n; i++) {
         scanf("%d", p + i);
         p[i]--;
         G[p[i]].push_back(i);
@@ -157,7 +160,8 @@ void solve(int test_number)
     }
     char C[3] = {'N', 'K', 'P'};
     for (int i = 0; i < n; i++) {
-        assert(color[i] != -1);
+       // assert(color[i] != -1);
+       if (color[i] != -1)
         printf("%c", C[color[i]]);
     }
 }
