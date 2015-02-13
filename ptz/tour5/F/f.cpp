@@ -66,10 +66,10 @@ int deg[MAXN];
 int leafqueue[MAXN];
 int qf, ql;
 int priority[MAXN];
+int leaves[MAXN];
+int parent[MAXN];
 
-
-
-vector<int> findLeaves(int v) {
+inline vector<int> findLeaves(int v) {
     vector<int> ans;
     for (int i = 0; i < G[v].size(); i++) {
         if (active[G[v][i]] && deg[G[v][i]] == 1)
@@ -78,49 +78,54 @@ vector<int> findLeaves(int v) {
     return ans;       
 }
 
-int getParent(int v) {
-    for (int i = 0; i < G[v].size(); i++)
-        if (active[G[v][i]])
-            return G[v][i];
-    assert(false);  
-    return 0;
+inline int getParent(int v) {
+    if (parent[v] == -1 || !active[parent[v]]) {
+        for (int i = 0; i < G[v].size(); i++)
+            if (active[G[v][i]])
+                return G[v][i];
+        assert(false);  
+    }
+    return parent[v];
 }
 
-int getpriority(int v) {
+inline int getpriority(int v) {
     return priority[v];
 }
-void recalcpriority(int v) {
+
+
+set<pair<int, int> > qq;
+
+inline void recalcpriority(int v) {
     if (deg[v] != 1) return;
-    priority[v] = deg[getParent(v)] - findLeaves(getParent(v)).size();
+    if (priority[v] != deg[getParent(v)] - leaves[getParent(v)]) {
+        qq.erase(mp(priority[v], v));
+        qq.insert(mp(priority[v] = deg[getParent(v)] - leaves[getParent(v)], v));
+    }
 }
 
 vector<vector<int>> slices;
 int isolated[MAXN];
 int isf, isl;
 
-
-set<pair<int, int> > qq;
-
 int op[MAXN];
 
-void update(int v) {
+inline void update(int v) {
     if (!active[v]) return;
-    if (deg[v] == 1) {
+    if (deg[v] == 1)
         recalcpriority(v);
-        qq.insert(mp(getpriority(v), v));
-    }
     vector<int> ls = findLeaves(v);
-    for (int i = 0; i < (int)ls.size(); i++) {
+    for (int i = 0; i < (int)ls.size(); i++)
         recalcpriority(G[v][i]);
-        qq.insert(mp(getpriority(G[v][i]), G[v][i]));
-    }
 }
 
-void disable(int v) {
+inline void disable(int v) {
+    if (deg[v] == 1)
+        leaves[getParent(v)]--;
     active[v] = false;
     for (int i = 0; i < G[v].size(); i++) {
         deg[G[v][i]]--;
         if (active[G[v][i]] && deg[G[v][i]] == 1) {
+            leaves[getParent(G[v][i])]++;
             leafqueue[ql++] = G[v][i];
         }
         if (active[G[v][i]] && deg[G[v][i]] == 0) {
@@ -138,7 +143,7 @@ void disable(int v) {
 
 int color[MAXN];
 
-bool check(int v, int col) {
+inline bool check(int v, int col) {
     for (int i = 0; i < G[v].size(); i++) {
         if (color[G[v][i]] == col) return false;
     }
@@ -148,10 +153,13 @@ bool check(int v, int col) {
 void solve(int test_number)
 {
     memset(op, -1, sizeof op);
+    memset(parent, -1, sizeof parent);
+    memset(priority, -1, sizeof priority);
+    memset(leaves, 0, sizeof leaves);
     qf = ql = 0;
     isf = isl = 0;
     int n; 
-    if (STRESS) n = 500001;
+    if (STRESS) n = 42;
     else scanf("%d", &n);   
     slices.clear();
     memset(deg, 0, sizeof deg);
@@ -191,10 +199,10 @@ void solve(int test_number)
     fill(active, active + n, true);
     for (int i = 0; i < n; i++) {
         if (deg[i] == 1) {
+            leaves[getParent(i)]++;
             leafqueue[ql++] = i;
             //int v = getParent(i);
             recalcpriority(i);
-            qq.insert(mp(getpriority(i), i));
         }
     }
     for (int i = 0; i < n - 3; i += 3) {
@@ -258,6 +266,5 @@ void solve(int test_number)
     }
     if (STRESS) {
         fprintf(stderr, "OK - %ld\n", (clock() - tstart) / CLOCKS_PER_SEC);
-
     }
 }
