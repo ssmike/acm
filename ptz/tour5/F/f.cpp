@@ -159,7 +159,7 @@ void solve(int test_number)
     qf = ql = 0;
     isf = isl = 0;
     int n; 
-    if (STRESS) n = 42;
+    if (STRESS) n = 4200;
     else scanf("%d", &n);   
     slices.clear();
     memset(deg, 0, sizeof deg);
@@ -170,12 +170,12 @@ void solve(int test_number)
             scanf("%d", p + i);
             p[i]--;
         } else {
-            int c = 0;
-            for (int j = max(0, i - 20); j < i; j++) {
+            int c = 0, clim = 0/*max(0, i - 100)*/;
+            for (int j = clim; j < i; j++) {
                 if (deg[j] < 4) c++;
             }
             c = rand()%c + 1;
-            for (int j = max(0, i - 20); j < i; j++) {
+            for (int j = clim; j < i; j++) {
                 if (deg[j] < 4) c--;
                 if (c == 0) {
                     p[i] = j;
