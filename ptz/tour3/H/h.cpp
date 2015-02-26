@@ -94,6 +94,7 @@ lint cnk(int n, int k) {
 }
 
 lint countD(lint l, lint r, lint k) {
+    if (l == 0) return r / k;
     return r / k - (l - 1) / k;
 }
 
@@ -109,7 +110,11 @@ int order(lint q) {
 
 lint qFact(lint q, lint n) {
     int t = order(q);
-    lint ans = modPow(p - 1, n / t, p);
+    lint k = 1;
+    for (int i = 1; i < t; i++) {
+        k = (k * (modPow(q, i, p) + p - 1)) % p;
+    }
+    lint ans = modPow(k, n / t, p);
     for (int i = n; modPow(q, i, p) != 1; i--) {
         ans = (ans * (modPow(q, i, p) + p - 1)) % p;
     }
