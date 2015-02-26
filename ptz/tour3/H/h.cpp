@@ -50,8 +50,6 @@ int main() {
         solve(i);
 }
 
-#define INF ((int)((int)1e9 + 10000))
-
 #define MAXP 300000
 
 lint fact[MAXP];
@@ -66,15 +64,6 @@ void precalc() {
     }
 }
 
-lint pow(lint x, lint p) {
-    lint r = 1;
-    for (int i = 0; i < p; i++) {
-        if (r > INF) return INF;
-        r = (r * x);
-    }
-    return r;
-}
-
 lint modPow(lint x, lint p, lint mod) {
     lint r = 1;
     while (p > 0) {
@@ -87,10 +76,6 @@ lint modPow(lint x, lint p, lint mod) {
         }
     }
     return r;
-}
-
-lint cnk(int n, int k) {
-    return (fact[n] * modPow((fact[n - k] * fact[k]) % p, p - 2, p)) % p;
 }
 
 lint countD(lint l, lint r, lint k) {
@@ -134,7 +119,7 @@ lint calc(lint n, lint k, lint P) {
     if (P > n) return 1;
     if (countD(n - k + 1, n, P) > countD(1, k, P))
         return 0;
-    lint ans = (Fact(n/P) * inv((Fact((n - k)/P) * Fact(k/P) % p))) % p;
+    lint ans = (Fact(n/P) * inv((Fact((n - k)/P) * Fact(k/P)) % p)) % p;
     return (ans * calc(n, k, P * p)) % p;
 }
 
