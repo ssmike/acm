@@ -34,7 +34,7 @@ using namespace std;
 
 void solve(int test_number);
 
-#define STRESS true
+#define STRESS false
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -83,7 +83,7 @@ inline int getParent(int v) {
         for (int i = 0; i < G[v].size(); i++)
             if (active[G[v][i]])
                 return G[v][i];
-        assert(false);  
+        //assert(false);  
     }
     return parent[v];
 }
@@ -223,6 +223,7 @@ void solve(int test_number)
                     u = vv;
                 if (u == -1) qq.erase(qq.begin());
             } while (u == -1);
+            assert(deg[u] == 1);
             v = getParent(u);
             slices.back().push_back(v);
             vector<int> ll = findLeaves(v);
