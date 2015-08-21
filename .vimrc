@@ -6,7 +6,7 @@ set shiftwidth=4
 set smarttab
 set expandtab
 set autoread
-set autoindent
+set cindent
 set number
 set expandtab
 imap {<CR>  {<CR>}<LEFT><CR><UP><SPACE><SPACE><SPACE><SPACE>
@@ -16,7 +16,7 @@ nmap <F2> :tabnew<CR>
 nmap <F3> :q!<CR>
 imap <F1> <ESC>:w<CR>a
 nmap <F1> :w<CR>
-set makeprg=g++\ -g\ -Wall\ -Wextra\ -Wno-unused-result\ -Wno-unused-parameter\ -std=c++11\ -DLOCAL\ %\ -o\ %<
+set makeprg=g++\ -O2\ -Wall\ -Wextra\ -Wno-unused-result\ -Wno-unused-parameter\ -std=c++11\ -DLOCAL\ %\ -o\ %<
 au BufNewFile *.cpp 0r /home/moon/template.cpp | 30 | set syntax=cpp
 nmap <F9> :make<CR>
 imap <F9> <ESC>:make<CR>a
